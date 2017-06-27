@@ -1,0 +1,10 @@
+[
+{
+  "title": "title goes here",
+    "name": "name goes here",
+    "trigger": "example",
+    "description": "description goes here",
+    "scope": "html",
+    "file": "example.snip"
+}
+]
