@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/fatih/color"
 )
 
 type snippetJSON struct {
@@ -61,11 +63,20 @@ func main() {
 
 		for i := range snippet {
 			// fmt.Printf("The ship '%s' first appeared on '%s'\n", snippet[i].Name, snippet[i].Trigger)
-			fmt.Printf("Title: '%s'\n", snippet[i].Title)
-			fmt.Printf("Name: '%s'\n", snippet[i].Name)
-			fmt.Printf("Trigger: '%s'\n", snippet[i].Trigger)
-			fmt.Printf("Description: '%s'\n", snippet[i].Description)
-			fmt.Printf("File: '%s'\n", snippet[i].File)
+			fmt.Printf("Title: ")
+			color.Green("'%s'/n", snippet[i].Title)
+
+			fmt.Printf("Name: ")
+			color.Green("'%s'\n", snippet[i].Name)
+
+			fmt.Printf("Trigger: ")
+			color.Green("'%s'\n", snippet[i].Trigger)
+
+			fmt.Printf("Description: ")
+			color.Green("'%s'\n", snippet[i].Description)
+
+			fmt.Printf("File: ")
+			color.Green("'%s'\n", snippet[i].File)
 
 			// fmt.Fprintf(WriteFile, "snippet '%s' '%s'", snippet[i].Trigger, snippet[i].Description)
 		}
@@ -82,11 +93,11 @@ func loopFiles() []string {
 		if f.IsDir() {
 			return nil
 		}
-		ignored, err := filepath.Match(".*", f.Name())
+		matched, err := filepath.Match("*.info", f.Name())
 		if err != nil {
 			return err
 		}
-		if !ignored {
+		if matched {
 			fileList = append(fileList, path)
 		}
 		return nil
