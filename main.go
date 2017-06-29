@@ -3,9 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/fatih/color"
 )
@@ -33,8 +35,11 @@ func check(e error) {
 }
 
 // main
-
 func main() {
+
+	if err := WriteStringToFile("good.txt", "% in string\n"); err != nil {
+		panic(err)
+	}
 
 	fileList := []string{}
 	err := filepath.Walk(inputPath, func(path string, file os.FileInfo, err error) error {
@@ -48,7 +53,24 @@ func main() {
 		if matched {
 			fileList = append(fileList, path)
 
-			var WriteFile, err = os.Create("output/" + file.Name())
+			name := strings.TrimSuffix(file.Name(), filepath.Ext(path))
+			check(err)
+
+			outputfileDir := filepath.Base(filepath.Dir(path))
+			check(err)
+
+			if outputfileDir == "input" {
+				outputfileDir = ""
+			}
+
+			fmt.Printf(name)
+			fmt.Printf("\n")
+			fmt.Printf(outputfileDir)
+			fmt.Printf("\n")
+			fmt.Printf("\n")
+			fmt.Printf("\n")
+
+			var WriteFile, err = os.Create("output/" + outputfileDir + name + ".snip")
 			check(err)
 			defer WriteFile.Close()
 
@@ -102,4 +124,19 @@ func main() {
 	})
 	check(err)
 
+}
+
+func WriteStringToFile(filepath, s string) error {
+	fo, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	defer fo.Close()
+
+	_, err = io.Copy(fo, strings.NewReader(s))
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
